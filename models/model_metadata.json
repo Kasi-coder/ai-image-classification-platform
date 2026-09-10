@@ -1,0 +1,17 @@
+{
+  "model_name": "mobilenet_v3_small",
+  "classes": [
+    "airplane",
+    "automobile",
+    "bird",
+    "cat",
+    "deer",
+    "dog",
+    "frog",
+    "horse",
+    "ship",
+    "truck"
+  ],
+  "device": "cuda",
+  "epochs": 5
+}
