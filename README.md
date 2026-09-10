@@ -18,6 +18,15 @@ The platform trains and compares two pretrained CNN architectures, evaluates the
 - **Testing:** automated API tests with pytest
 - **Trained model:** saved PyTorch `best_model.pt`
 
+## 🌐 Live Deployment
+
+- **Live Streamlit Demo:** https://ai-image-classification-platform-czhqd2rj4edkmhzyknxx4.streamlit.app
+- **Live FastAPI Backend:** https://ai-image-classification-platform.onrender.com
+- **Live Swagger API Docs:** https://ai-image-classification-platform.onrender.com/docs
+- **API Health Check:** https://ai-image-classification-platform.onrender.com/health
+
+The deployed Streamlit frontend sends image prediction requests to the deployed FastAPI backend.
+
 ## 📊 Final Results
 
 The final selected model was **MobileNetV3-Small**.
@@ -93,6 +102,24 @@ flowchart LR
     A --> R[Prediction JSON]
     R --> S
 ```
+
+## 🎯 Training Strategy
+
+The demonstrated final training run used:
+
+- **Epochs:** 5
+- **Training subset:** 10,000 images
+- **Validation subset:** 2,000 images
+- **Test subset during model selection:** 2,000 images
+- **Optimizer:** AdamW
+- **Learning rate:** 0.001
+- **Weight decay:** 0.0001
+- **Transfer learning:** ImageNet-pretrained CNN backbones with trainable classification heads
+- **Augmentation:** random horizontal flip, random crop, and color jitter
+
+The two architectures were trained under the same demonstrated configuration and compared using validation accuracy. MobileNetV3-Small achieved the stronger validation result and was selected for the final full-test evaluation.
+
+**Reproducibility note:** this demonstrated run used a fixed training configuration rather than a broad automated hyperparameter sweep. The project therefore does not claim a comprehensive hyperparameter-tuning study.
 
 ## ⚡ Quick Start
 
@@ -187,7 +214,6 @@ ai-image-classification-platform/
 │   └── make_report.py
 ├── src/
 │   ├── __init__.py
-│   ├── data.py
 │   ├── database.py
 │   ├── inference.py
 │   ├── metrics.py
