@@ -1,142 +1,88 @@
 # AI-Powered Image Classification Platform
 
-An end-to-end deep-learning image classification platform using **CIFAR-10**, transfer learning, REST APIs, Streamlit UI, prediction history, evaluation metrics, and technical documentation.
+An end-to-end deep-learning image classification platform built with **PyTorch, CIFAR-10, transfer learning, FastAPI, Streamlit, and SQLite**.
 
-## Project highlights
+The platform trains and compares two pretrained CNN architectures, evaluates the selected model on the full CIFAR-10 test set, exposes predictions through a REST API, and provides a browser-based interface with confidence scores and prediction history.
 
-- Public dataset: CIFAR-10 (10 object categories)
-- Image preprocessing and augmentation
-- Train/validation/test split
-- Transfer learning comparison:
-  - ResNet18
-  - MobileNetV3-Small
-- Metrics:
-  - Accuracy
-  - Precision
-  - Recall
-  - F1-score
-  - Top-5 accuracy
-  - Confusion matrix
-- FastAPI REST API
-- Streamlit frontend
-- SQLite prediction history
-- Saved PyTorch model
-- Training/evaluation artifacts
-- Docker configuration
+## 🚀 Project Highlights
 
-## Dataset
+- **Public dataset:** CIFAR-10 (60,000 color images, 10 classes)
+- **Preprocessing:** resize, normalization, and training-time augmentation
+- **Models compared:** ResNet18 and MobileNetV3-Small
+- **Transfer learning:** ImageNet-pretrained backbones with classification heads
+- **Evaluation:** Accuracy, Precision, Recall, F1-score, Top-5 Accuracy, Confusion Matrix
+- **Backend:** FastAPI REST API with Swagger/OpenAPI documentation
+- **Frontend:** Streamlit image-upload application
+- **Prediction history:** SQLite database
+- **Deployment:** Docker and Docker Compose configuration
+- **Testing:** automated API tests with pytest
+- **Trained model:** saved PyTorch `best_model.pt`
 
-CIFAR-10 contains 60,000 32×32 color images in 10 classes:
-airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck.
+## 📊 Final Results
 
-Official dataset information:
-https://www.cs.toronto.edu/~kriz/cifar.html
+The final selected model was **MobileNetV3-Small**.
 
-The training script downloads CIFAR-10 automatically with `torchvision`.
+| Metric | Result |
+|---|---:|
+| Accuracy | **80.93%** |
+| Weighted Precision | **81.74%** |
+| Weighted Recall | **80.93%** |
+| Weighted F1-score | **80.86%** |
+| Top-5 Accuracy | **99.28%** |
 
-## Quick start
+The model was evaluated on the **full 10,000-image CIFAR-10 test set**.
 
-### 1. Create environment
+### Model comparison
 
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-```
+During the demonstrated training run (5 epochs using 10,000 training images and 2,000 validation images), MobileNetV3-Small achieved the stronger validation performance and was selected as the final model.
 
-### 2. Train and compare models
+| Model | Best validation accuracy |
+|---|---:|
+| ResNet18 | 78.10% |
+| MobileNetV3-Small | **81.45%** |
 
-For a CPU-friendly internship demo:
+## 🖥️ Working Demo
 
-```bash
-python scripts/train.py --epochs 3 --train-limit 10000 --val-limit 2000 --test-limit 2000
-```
+The Streamlit application supports:
 
-For a stronger run, remove the limits and increase epochs.
+1. Uploading an image
+2. Displaying the predicted CIFAR-10 class
+3. Showing prediction confidence
+4. Showing the Top-5 predictions
+5. Recording predictions in SQLite history
 
-The script:
-- downloads CIFAR-10
-- creates train/validation/test splits
-- applies augmentation
-- fine-tunes ResNet18 and MobileNetV3-Small
-- evaluates both
-- selects the best model by validation accuracy
-- saves the best model to `models/best_model.pt`
-- writes metrics and confusion matrices to `reports/`
+A CIFAR-10 test image was successfully classified as **cat** with **85.5% confidence** during the local demonstration.
 
-### 3. Start the API
+## 🧠 Dataset
 
-```bash
-python -m uvicorn api.main:app --reload
-```
+CIFAR-10 contains 60,000 32×32 RGB images across 10 classes:
 
-Open:
-http://127.0.0.1:8000/docs
+`airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck`
 
-### 4. Start the frontend
+Official dataset information: https://www.cs.toronto.edu/~kriz/cifar.html
 
-Open a second terminal:
+The training pipeline downloads CIFAR-10 automatically through `torchvision`.
 
-```bash
-streamlit run app/streamlit_app.py
-```
-
-The browser UI lets you upload an image, see top predictions/confidence, and view prediction history.
-
-## Project structure
-
-```text
-image_classification_platform/
-├── app/
-│   └── streamlit_app.py
-├── api/
-│   └── main.py
-├── data/
-│   └── README.md
-├── models/
-│   └── README.md
-├── notebooks/
-│   └── 01_experiments.md
-├── reports/
-│   └── README.md
-├── scripts/
-│   ├── train.py
-│   ├── evaluate.py
-│   └── make_report.py
-├── src/
-│   ├── __init__.py
-│   ├── data.py
-│   ├── models.py
-│   ├── metrics.py
-│   ├── database.py
-│   └── inference.py
-├── tests/
-│   └── test_api.py
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
-```
-
-## Data pipeline diagram
+## 🔄 Data & Model Pipeline
 
 ```mermaid
 flowchart LR
     A[CIFAR-10] --> B[Train / Validation / Test Split]
     B --> C[Resize + Normalize]
-    C --> D[Augmentation on Training]
-    D --> E[Transfer Learning]
+    C --> D[Training Augmentation]
+    D --> E[ImageNet Transfer Learning]
     E --> F[ResNet18]
     E --> G[MobileNetV3-Small]
-    F --> H[Validation Evaluation]
+    F --> H[Validation Comparison]
     G --> H
-    H --> I[Best Model]
-    I --> J[FastAPI]
-    I --> K[Streamlit]
-    K --> L[SQLite Prediction History]
+    H --> I[Selected MobileNetV3-Small]
+    I --> J[Full Test Evaluation]
+    J --> K[FastAPI]
+    K --> L[Streamlit UI]
+    K --> M[(SQLite Prediction History)]
 ```
 
-## Deployment architecture
+## 🏗️ Deployment Architecture
 
 ```mermaid
 flowchart LR
@@ -148,8 +94,139 @@ flowchart LR
     R --> S
 ```
 
-## Important note
+## ⚡ Quick Start
 
-Pretrained ImageNet weights are downloaded by torchvision on the first training run. A network connection is therefore required for the initial training setup.
+### 1. Create a virtual environment
 
-The trained model is intentionally generated locally by `scripts/train.py` rather than being fabricated. After training, commit `models/best_model.pt` and the generated `reports/` artifacts to GitHub.
+```bash
+python -m venv .venv
+```
+
+Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Train and compare models
+
+CPU-friendly demonstration:
+
+```bash
+python scripts/train.py --epochs 3 --train-limit 10000 --val-limit 2000 --test-limit 2000
+```
+
+The pipeline downloads CIFAR-10, prepares the data, applies augmentation, trains both transfer-learning models, compares validation performance, and saves the selected model to `models/best_model.pt`.
+
+### 3. Evaluate the trained model
+
+```bash
+python scripts/evaluate.py
+```
+
+This produces the final classification metrics and confusion matrix for the full CIFAR-10 test set.
+
+### 4. Start the FastAPI backend
+
+```bash
+python -m uvicorn api.main:app --reload
+```
+
+Swagger API documentation:
+
+`http://127.0.0.1:8000/docs`
+
+Available endpoints include:
+
+- `GET /health`
+- `GET /classes`
+- `GET /history`
+- `POST /predict`
+
+### 5. Start the Streamlit frontend
+
+Open a second terminal:
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+The browser application opens on the local Streamlit address and communicates with the FastAPI backend.
+
+## 📁 Project Structure
+
+```text
+ai-image-classification-platform/
+├── app/
+│   └── streamlit_app.py
+├── api/
+│   ├── __init__.py
+│   └── main.py
+├── data/
+│   └── README.md
+├── models/
+│   ├── README.md
+│   ├── best_model.pt
+│   └── model_metadata.json
+├── notebooks/
+│   └── 01_experiments.md
+├── reports/
+│   ├── README.md
+│   ├── best_model_metrics.json
+│   ├── technical_report.md
+│   └── image_classification_technical_report.pdf
+├── scripts/
+│   ├── train.py
+│   ├── evaluate.py
+│   └── make_report.py
+├── src/
+│   ├── __init__.py
+│   ├── data.py
+│   ├── database.py
+│   ├── inference.py
+│   ├── metrics.py
+│   └── models.py
+├── tests/
+│   └── test_api.py
+├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
+
+## 🧪 Testing
+
+The API test suite was executed successfully:
+
+```text
+2 passed
+```
+
+## 📄 Documentation
+
+- [Technical Report](reports/image_classification_technical_report.pdf)
+- [Technical Report — Markdown](reports/technical_report.md)
+- [Final Model Metrics](reports/best_model_metrics.json)
+- [Model Metadata](models/model_metadata.json)
+
+## 🐳 Docker
+
+The repository includes `Dockerfile` and `docker-compose.yml` for containerized deployment.
+
+## ⚠️ Notes
+
+- CIFAR-10 images are small (32×32), so performance on unrelated real-world photographs can differ from performance on in-distribution CIFAR-10 images.
+- ImageNet pretrained weights are downloaded by `torchvision` during the first training setup, so an internet connection is required initially.
+- The included `best_model.pt` is the trained PyTorch model produced by the project pipeline.
+
+## 👤 Author
+
+**Kasi-coder**
+
+GitHub: https://github.com/Kasi-coder
