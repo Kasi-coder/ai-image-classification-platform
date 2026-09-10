@@ -7,7 +7,7 @@ st.set_page_config(page_title="AI Image Classifier", page_icon="🖼️", layout
 st.title("🖼️ AI-Powered Image Classification")
 st.caption("CIFAR-10 • Transfer Learning • ResNet18 / MobileNetV3")
 
-API = st.sidebar.text_input("API URL", "http://127.0.0.1:8000")
+API = "https://ai-image-classification-platform.onrender.com"
 uploaded = st.file_uploader("Upload an image", type=["jpg","jpeg","png"])
 
 if uploaded:
